@@ -21,6 +21,7 @@ This library provides a hash table data structure for ChoiceScript games, allowi
   7 - Printing Table Contents
 
 ======================================================
+
 ⚠️ Behavior with Duplicate Keys
 
 🚨 Error Handling
@@ -36,22 +37,19 @@ This library provides a hash table data structure for ChoiceScript games, allowi
 ✅ Debugging Tools – Print table contents for inspection.
 
 📥 Installation
- the entire cs_hash.txt code into your ChoiceScript game project.
+ Just copy and paste the  cs_hash.txt file into your ChoiceScript game "scenes" folder.
 
-Include it in your game file using:
+call it in your game file using:
 
-
- cs_hash.txt to your scenes files.
-access its commands by the use of *gosub_scene routines.
-
-Now, you can use any of the hash table functions in your game.
+ "*gosub_scene cs_hash" routines in orger to call the hash table functions in your game.
 
 🎮 Usage & Examples
 1. Initializing a Hash Table
-Before using a hash table, you must initialize it with a name it's array size.
+Before using a hash table: Thou must initialize it with a array name <a string!> it's array size <number>.
 
+For exmaple the command below:
 *gosub_scene cs_hash hash_table_init "inventory" 20  
-Creates a table named inventory with space for 10 key-value pairs (since each pair takes 2 slots).
+Creates a table named inventory with space for 9 key-value pairs (since each pair takes 2 slots and the mtadata necessary for it to work is already occupying the first slot).
 
 2. Setting Key-Value Pairs
 Use hash_table_set to add or update entries.
@@ -59,8 +57,12 @@ Use hash_table_set to add or update entries.
 
 
 *gosub_scene cs_hash hash_table_set "inventory" "sword" "Excalibur"  
+
+
 *gosub_scene cs_hash hash_table_set "inventory" "potion" "Health Potion"  
-If "sword" already exists, its value is overwritten with "Excalibur".
+
+
+Note that, if "sword" already exists, its value is overwritten with "Excalibur".
 
 3. Retrieving Values
 Use hash_table_get to fetch a value by key.
@@ -69,16 +71,18 @@ Use hash_table_get to fetch a value by key.
 *if return = "KEY_NOT_FOUND"  
   You don't have a sword.  
 *else  
-  Your sword: {return} (Excalibur)  
+  Your sword: ${return} (it should print "Excalibur")  
   
 4. Deleting Entries
 Remove a key-value pair with hash_table_delete.
 
 
 
-*gosub_scene cs_hash hash_table_delete "inventory" "potion"  
+*gosub_scene cs_hash hash_table_delete "inventory" "potion" 
+
 *if return = "DELETED"  
-  You used the potion!  
+  You used the potion! 
+  
 The table automatically compacts to fill the gap.
 
 5. Clearing the Table
@@ -87,6 +91,7 @@ Reset all entries with hash_table_clear.
 
 
 *gosub_scene cs_hash hash_table_clear "inventory"  
+
 6. Checking Table Size
 Get the number of entries with hash_table_size.
 
@@ -95,10 +100,12 @@ Get the number of entries with hash_table_size.
 *gosub_scene cs_hash hash_table_size "inventory"  
 *if return = 0  
   Your inventory is empty!  
+  
 7. Printing Table Contents (Debugging)
-Display all stored data with hash_table_print.
+Display all stored data with hash_table_print. (very useful when testing your game!)
 
 *gosub_scene cs_hash hash_table_print "inventory"  
+
 Example output:
 
 
@@ -106,6 +113,8 @@ Example output:
 Table: inventory (2/10 entries)  
 [0] Key: sword → Value: Excalibur  
 [1] Key: potion → Value: Health Potion  
+
+
 ⚠️ Behavior with Duplicate Keys
 If you hash_table_set a key that already exists, the old value is overwritten.
 
@@ -116,10 +125,15 @@ Example:
 
 
 *gosub_scene cs_hash hash_table_set "stats" "strength" 10  
+
 *gosub_scene cs_hash hash_table_set "stats" "strength" 15  
-... them you 
+
+more code here... 
+them,
+
 *gosub_scene cs_hash hash_table_get "stats" "strength"  
-Output: 15 (the original 10 is replaced).
+
+Output of ${return} will be: 15 (the original 10 was replaced).
 
 🚨 Error Handling
 Hash Table Full: If you exceed the maximum size, hash_table_set logs:
@@ -133,20 +147,21 @@ Key Not Found: hash_table_get and hash_table_delete return "KEY_NOT_FOUND".
 ✔ Initialize Once – Call hash_table_init only once per table.
 ✔ Check for Key Existence – Always verify return after hash_table_get.
 ✔ Use Meaningful Keys – Avoid numeric keys (e.g., "item_1" instead of 1).
-✔ Monitor Size – Use hash_table_size to prevent overflows.
+✔ Monitor Size – Use hash_table_size to prevent overflows. (!!)
 
 🎉 Conclusion
 This library simplifies dynamic data management in ChoiceScript, making it ideal for:
 
-Inventories
+*Inventories!
 
-Player Stats
+*Player Stats!
 
-Quest Tracking
+*Quest Tracking!
 
-Dynamic Story Flags
+*Dynamic Story Flags!
 
-Try it out and let me know if you need enhancements! 🚀
+Try it out and let me know if you need enhancements! ::Rocket::
 
-📜 Full Code: cs_hash.txt (Paste into your project)
-❓ Questions? Ask in the Choice of Games Forum!
+📜 Full Code: cs_hash.txt (Paste into your scenes folder)
+
+❓ Questions? Ask the guys at Choice of Games Forum!
