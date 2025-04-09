@@ -1,6 +1,7 @@
 *finish
 ================================================
-Here's an enhanced version of my old data structure library with better organization, error handling, and additional features:
+Here's an enhanced version of my old data structure library 
+with better organization, error handling, and additional features:
 ================================================
 * Added hash_table_delete to remove entries * 
 (with Automatic table compaction after deletion)
@@ -12,6 +13,30 @@ here's ye code!
 ==================================================
 *comment ===============================================================
 *comment NEW HASH TABLE LIBRARY
+*comment ===============================================================
+
+*comment Below are detailed comments for each command label in your ChoiceScript hash table library. Each comment includes:
+
+*comment Function Name: The name of the function.
+
+*comment Number of Arguments: The number of arguments the function takes and a description of each.
+
+*comment Argument Types: The type of each argument (e.g., string, number, variable name).
+
+*comment Usage Example: A simple example demonstrating how to use the function.
+
+*comment BEHOLD!!:
+*comment ===============================================================
+*comment Function: hash_table_init
+*comment Initializes a new hash table with internal metadata.
+*comment
+*comment Arguments: 2
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment   2. max_size (number) - size of the array that will be converted into a table.
+*comment
+*comment Usage Example:
+*comment   *create_array myTable 10 ""
+*comment   *gosub hash_table_init "myTable" 10
 *comment ===============================================================
 *label hash_table_init
 *params table_name max_size
@@ -39,6 +64,20 @@ here's ye code!
 *set i i + 1
 *goto init_loop
 *return
+*comment ===============================================================
+
+*comment ===============================================================
+*comment Function: hash_table_set
+*comment Adds or updates a key-value pair in the hash table.
+*comment
+*comment Arguments: 3
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment   2. key (string) - The key to set or update.
+*comment   3. value (string) - The value associated with the key.
+*comment
+*comment Usage Example:
+*comment   *gosub hash_table_set "myTable" "username" "player1"
+*comment ===============================================================
 
 *label hash_table_set
 *params table_name key value
@@ -71,6 +110,22 @@ here's ye code!
 *temp new_index ("${table_name}_1")
 *set {new_index} current_index + 2
 *return
+*comment ===============================================================
+
+*comment ===============================================================
+*comment Function: hash_table_get
+*comment Retrieves the value associated with a given key in the hash table.
+*comment
+*comment Arguments: 2
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment   2. key (string) - The key whose value is to be retrieved.
+*comment
+*comment Usage Example:
+*comment   *temp result ""
+*comment   *gosub hash_table_get "myTable" "username"
+*comment   *set result return
+*comment   The username is ${return}
+*comment ===============================================================
 
 *label hash_table_get
 *params table_name key
@@ -114,6 +169,21 @@ here's ye code!
 *temp max_size {max_var}
 *return
 
+*comment ===============================================================
+
+*comment ===============================================================
+*comment Function: hash_table_delete
+*comment Removes a key-value pair from the hash table and compacts the table.
+*comment
+*comment Arguments: 2
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment   2. key (string) - The key to be removed.
+*comment
+*comment Usage Example:
+*comment   *gosub hash_table_delete "myTable" "username"
+*comment   will delete username and its value from the table
+*comment ===============================================================
+
 *label hash_table_delete
 *params table_name key
 *comment Removes a key-value pair
@@ -134,8 +204,18 @@ here's ye code!
 *set {new_index} current_index - 2
 *set return "DELETED"
 *return
+*comment ===============================================================
 
-
+*comment ===============================================================
+*comment Function: hash_table_compact
+*comment
+*comment Internal function used by hash_table_delete to maintain table integrity.
+*comment After a key-value pair is deleted, this function shifts all following 
+*comment key-value pairs left by two slots to "fill the gap" in the table.
+*comment This ensures that the hash table remains continuous without empty slots 
+*comment between used entries, preserving order and preventing fragmentation.
+*comment
+*comment ===============================================================
 *label hash_table_compact
 *params table_name start_index
 *comment Internal: Shifts all pairs left to fill gaps
@@ -169,6 +249,18 @@ here's ye code!
 *set {current_slot} ""
 *set i i + 1
 *goto clear_loop
+*comment ===============================================================
+
+*comment ===============================================================
+*comment Function: hash_table_print
+*comment Prints all key-value pairs in the hash table along with capacity information.
+*comment
+*comment Arguments: 1
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment
+*comment Usage Example:
+*comment   *gosub hash_table_print "myTable"
+*comment ===============================================================
 
 *label hash_table_print
 *params table_name
@@ -191,6 +283,19 @@ Table: ${table_name} (${(current_index - 3)/2}/${((max_size/2))} entries)
 *line_break
 *set i i + 2
 *goto print_loop
+
+*comment ===============================================================
+*comment Function: hash_table_size
+*comment Returns the number of key-value pairs currently in the hash table.
+*comment
+*comment Arguments: 1
+*comment   1. table_name (string) - The base name for the hash table variables.
+*comment
+*comment Usage Example:
+*comment   *temp size 0
+*comment   *gosub hash_table_size "myTable"
+*comment   *set size return
+*comment ===============================================================
 
 *label hash_table_size
 *params table_name
