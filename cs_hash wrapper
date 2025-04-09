@@ -1,0 +1,79 @@
+🌟 Simplified cs_hash Wrapper Labels 
+
+Each label below is a shortcut to the full cs_hash function, meant to streamline development and testing.
+
+please copy the "header" label on top
+of all your files in the scenes folder
+in order to use it.
+
+  Code:
+*comment paste it at the top of your scene.txt
+
+*label header 
+*goto \header
+
+*label set_table 
+*params table_name size 
+*gosub_scene cs_hash hash_table_init table_name size 
+*comment Initializes a new hash table 
+*return
+
+*label delete 
+*params table_name key 
+*gosub_scene cs_hash hash_table_delete table_name key 
+*comment Deletes a key-value pair 
+*return
+
+*label set 
+*params table_name key value 
+*gosub_scene cs_hash hash_table_set table_name key value 
+*comment Sets/updates a key-value pair 
+*return
+
+*label get
+*params table_name key 
+*gosub_scene cs_hash hash_table_get table_name key 
+*comment Retrieves a value by key 
+*return
+
+*label print_table 
+*params table_name 
+*gosub_scene cs_hash hash_table_print table_name 
+*comment Prints all entries (debugging) 
+*return
+
+*label clear_table 
+*params table_name 
+*gosub_scene cs_hash hash_table_clear table_name 
+*comment Wipes the entire table 
+*return
+
+*label table_size 
+*params table_name 
+*gosub_scene cs_hash hash_table_size table_name 
+*comment Returns number of entries 
+*return
+
+*label \header
+
+(... YOUR CODE GOES HERE ...)
+
+here some examples:
+
+Room Navigation, before:
+
+*if room = "library"
+  *set desc "Dusty bookshelves"
+*elseif room = "lab"
+  *set desc "Smells of chemicals"
+
+Room navigation with cs_hash and wrapper:
+
+*gosub get rooms ${room}
+${return}
+
+Its easier now!
+
+
+now whe need only to set the arguments and even add/load in bulk using loops and *temp_array receivers!
+
