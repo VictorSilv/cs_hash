@@ -1,0 +1,200 @@
+*finish
+================================================
+Here's an enhanced version of my old data structure library with better organization, error handling, and additional features:
+================================================
+* Added hash_table_delete to remove entries * 
+(with Automatic table compaction after deletion)
++ Added hash_table_clear to reset the table + 
+* Added hash_table_size to check current entry count *
+- hash_table_print shows capacity information -
+here's ye code!
+=================================================
+==================================================
+*comment ===============================================================
+*comment NEW HASH TABLE LIBRARY
+*comment ===============================================================
+*label hash_table_init
+*params table_name max_size
+*comment Initializes a new hash table with metadata stored internally
+*comment Structure: 
+*comment   ${table_name}_1 = current_index (next available slot)
+*comment   ${table_name}_2 = max_size
+*comment   ${table_name}_3+ = key/value pairs
+
+*temp table_index ("${table_name}_1")
+*set {table_index} 3  
+*comment First data slot index
+*temp table_max ("${table_name}_2")
+*set {table_max} (max_size-2)
+
+*comment Initialize index (starts at first data slot)
+*temp total_slots (2 + (max_size / 2))
+*temp i 3
+*label init_loop
+*if i > total_slots
+  *comment Account for metadata + key/value pairs
+  *return
+*temp current_slot ("${table_name}_${i}")
+*set {current_slot} ""
+*set i i + 1
+*goto init_loop
+*return
+
+*label hash_table_set
+*params table_name key value
+*comment Declare ALL variables used in this subroutine
+*temp current_index 0
+*temp max_size 0
+*temp found false
+*temp key_index 0
+*temp new_index 0
+*temp key_slot ""
+*temp value_slot ""
+
+*gosub hash_table_load_metadata
+*gosub hash_table_find_key
+
+*if found
+  *temp value_slot ("${table_name}_${key_index + 1}")
+  *set {value_slot} value
+  *return 
+
+*if current_index > ((max_size* 2))
+  *bug HASH_TABLE_FULL: "${table_name} current_index: ${current_index}"
+  *return 
+
+*temp key_slot ("${table_name}_${current_index}")
+*set {key_slot} key
+*temp value_slot ("${table_name}_${current_index + 1}")
+*set {value_slot} value
+
+*temp new_index ("${table_name}_1")
+*set {new_index} current_index + 2
+*return
+
+*label hash_table_get
+*params table_name key
+*temp current_index 0
+*temp max_size 0
+*gosub hash_table_load_metadata
+*temp found false
+*temp key_index 0
+*gosub hash_table_find_key
+*if found
+  *temp value_slot ("${table_name}_${key_index + 1}")
+  *set return ("${{value_slot}}")
+  *return
+*set return "KEY_NOT_FOUND"
+*return
+
+*label hash_table_find_key
+*comment Local variables for THIS SUBROUTINE
+*temp i 3
+*temp current_key ""
+*temp found false
+*temp key_index 0
+
+*label find_loop
+*if i >= current_index
+  *return
+*temp current_key ("${table_name}_${i}")
+*if {current_key} = key
+  *set key_index i
+  *set found true
+  *return
+*set i i + 2
+*goto find_loop
+*return
+
+*label hash_table_load_metadata
+*comment Load into PARENT'S variables (must be declared there first)
+*temp index_var ("${table_name}_1")
+*temp current_index {index_var}
+*temp max_var ("${table_name}_2")
+*temp max_size {max_var}
+*return
+
+*label hash_table_delete
+*params table_name key
+*comment Removes a key-value pair
+*gosub hash_table_load_metadata
+*gosub hash_table_find_key
+*if not (found)
+  *set return "KEY_NOT_FOUND"
+  *return
+*comment Clear the slots
+*temp key_slot ("${table_name}_${key_index}")
+*set {key_slot} ""
+*temp value_slot ("${table_name}_${key_index + 1}")
+*set {value_slot} ""
+*comment Compact if not the last pair
+*if key_index < (current_index - 2)
+  *gosub hash_table_compact table_name key_index
+*temp new_index ("${table_name}_1")
+*set {new_index} current_index - 2
+*set return "DELETED"
+*return
+
+
+*label hash_table_compact
+*params table_name start_index
+*comment Internal: Shifts all pairs left to fill gaps
+*set i start_index + 2
+*label compact_loop
+*if i >= current_index
+  *return
+*temp source_key ("${table_name}_${i}")
+*temp source_val ("${table_name}_${i + 1}")
+*temp dest_key ("${table_name}_${i - 2}")
+*temp dest_val ("${table_name}_${i - 1}")
+*set {dest_key} {source_key}
+*set {dest_val} {source_val}
+*set {source_key} ""
+*set {source_val} ""
+*set i i + 2
+*goto compact_loop
+
+*label hash_table_clear
+*params table_name
+*comment Resets the entire table
+*temp index_var ("${table_name}_1")
+*set {index_var} 3  
+*comment Reset index to first data slot
+*gosub hash_table_load_metadata
+*set i 3
+*label clear_loop
+*if i > (max_size * 2 + 2)
+  *return
+*temp current_slot ("${table_name}_${i}")
+*set {current_slot} ""
+*set i i + 1
+*goto clear_loop
+
+*label hash_table_print
+*params table_name
+*comment Prints all key-value pairs
+*gosub hash_table_load_metadata
+Table: ${table_name} (${(current_index - 3)/2}/${((max_size/2))} entries)
+*line_break
+*if current_index = 3
+  *return
+*temp i 3
+*label print_loop
+*if i >= current_index
+  *return
+*temp current_key ("${table_name}_${i}")
+*temp current_val ("${table_name}_${i + 1}")
+[${(i - 1)/2}] Key: ${{current_key}} 
+*comment<< [i]address[/i]:${current_key}   
+→ Value: ${{current_val}} 
+*comment << [i]address[/i]:${current_val}
+*line_break
+*set i i + 2
+*goto print_loop
+
+*label hash_table_size
+*params table_name
+*comment Returns number of entries
+*temp index_var ("${table_name}_1")
+*set return ( {index_var} - 3 ) / 2
+*return
