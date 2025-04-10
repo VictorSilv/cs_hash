@@ -1,0 +1,135 @@
+*title new #table library
+*author Victor Silva - FAETERJ - RIO
+*comment always declare a return var: 
+*create return ""
+*create_array inventory 800 ""
+
+
+*comment ===============================================================
+*comment PROCEDURAL HASH TABLE POPULATION (Add to startup.txt)
+*comment ===============================================================
+
+*comment List of procedural generators
+
+
+*comment past it on top of all your scenes files:
+*label header
+*goto \header
+*label hash_table_init
+*params arg arg2
+*gosub_scene cs_hash hash_table_init arg arg2
+*comment Initialize a table
+
+*return
+*label hash_table_delete
+*params arg arg2
+*comment Remove an item
+*gosub_scene cs_hash hash_table_delete arg arg2
+*return
+
+*label hash_table_set 
+*params table key value
+*comment Add some items
+*gosub_scene cs_hash hash_table_set table key value
+*return
+
+*label hash_table_get
+*params arg arg2
+*comment Get an item count
+*gosub_scene cs_hash hash_table_get "inventory" "potion"
+*return
+
+*label hash_table_print
+*params arg
+*comment Print all items
+*gosub_scene cs_hash hash_table_print arg  
+*return
+
+======================================================================================
+
+=======================================================================================
+*label \header
+
+
+*temp_array adjectives 9 ""
+*temp_array item_types 10 ""
+*temp_array potion_types 5 "healing" "mana" "invisibility" "strength" "poison"
+
+*set item_types[1] "sword"
+*set item_types[2] "potion"
+*set item_types[3] "scroll"
+*set item_types[4] "ring"
+*set item_types[5] "amulet"
+*set item_types[6] "gem"
+*set item_types[7] "shield"
+*set item_types[8] "helm"
+*set item_types[9] "gauntlets"
+*set item_types[10] "cloak"
+*set adjectives[1] "rusty"
+*set adjectives[2] "shiny"
+*set adjectives[3] "cursed"
+*set adjectives[4] "blessed"
+*set adjectives[5] "enchanted"
+*set adjectives[6] "glowing"
+*set adjectives[7] "ancient"
+*set adjectives[8] "fragile"
+*set adjectives[9] "legendary"
+
+
+*comment ================================================
+*comment ARRAY DECLARATIONS (Must be under header label)
+*comment ================================================
+*temp_array adjectives 9 "rusty" "shiny" "cursed" "blessed" "enchanted" "glowing" "ancient" "fragile" "legendary"
+*temp_array item_types 10 "sword" "potion" "scroll" "ring" "amulet" "gem" "shield" "helm" "gauntlets" "cloak"
+*temp_array potion_types 5 "healing" "mana" "invisibility" "strength" "poison"
+
+*comment ================================================
+*comment MAIN GAME START
+*comment ================================================
+*label start
+*comment Initialize hash table (40 slots = 19 items + metadata)
+*gosub hash_table_init "inventory" 40
+
+*comment Populate with procedural items
+*temp i 1
+*label populate_loop
+*if i > 19
+  *comment Max capacity reached
+  *goto populate_end
+
+*comment Get random array indices
+*temp type_idx 0
+*temp adj_idx 0
+*rand type_idx 1 10
+*rand adj_idx 1 9
+
+*comment Get array values
+*temp item_type item_types[type_idx]
+*temp item_adjective adjectives[adj_idx]
+
+*comment Special handling for potions
+*if item_type = "potion"
+  *temp potion_idx 0
+  *rand potion_idx 1 5
+  *set item_type ("potion of " & "${potion_types[potion_idx]}")
+
+*comment Generate item value
+*temp item_value 0
+*rand item_value 1 100
+
+*comment Create entry
+*temp item_key ("item_${i}")
+*temp item_name ("${item_adjective} ${item_type} (${item_value}g)")
+*gosub hash_table_set "inventory" item_key item_name
+
+*set i i + 1
+*goto populate_loop
+
+*label populate_end
+*comment Display results
+*gosub hash_table_print "inventory"
+*page_break
+*finish
+
+
+this file is a demostration.
